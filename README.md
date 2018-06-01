@@ -8,7 +8,7 @@ The borders are turned on and off via the Layers menu.
 
 Most editors will not have a need to see where the tile borders are on a regular basis, outside of curiosity. There are some scenarios where this is useful, however:
 
-- Which trigger objects are on the same tile as an area place polygon that can be used to force a tile update.
+- Determining which trigger objects are on the same tile as an area place polygon that can be used to force a tile update.
 - Explaining partial or odd area place polygons in the client.
 - Helping to diagnose very rare issues when objects cross tile borders.
 
