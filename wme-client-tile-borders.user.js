@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Client Tile Borders
 // @namespace    https://greasyfork.org/en/users/32336-joyriding
-// @version      1.0
+// @version      1.1
 // @description  Displays grid lines representing tile borders in the client.
 // @author       Joyriding
 // @include      https://beta.waze.com/*
