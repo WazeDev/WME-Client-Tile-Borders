@@ -8,7 +8,7 @@
 // @include      https://www.waze.com/editor*
 // @include      https://www.waze.com/*/editor*
 // @exclude      https://www.waze.com/user/editor*
-// @require      https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js?version=59834
+// @require      https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
 // @grant        none
 // ==/UserScript==
 
