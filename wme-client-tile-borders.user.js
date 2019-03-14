@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Client Tile Borders
 // @namespace    https://greasyfork.org/en/users/32336-joyriding
-// @version      1.1
+// @version      1.2
 // @description  Displays grid lines representing tile borders in the client.
 // @author       Joyriding
 // @include      https://beta.waze.com/*
@@ -11,6 +11,11 @@
 // @require      https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
 // @grant        none
 // ==/UserScript==
+
+/* global W */
+/* global OL */
+/* global $ */
+/* global WazeWrap */
 
 (function() {
     'use strict';
@@ -33,7 +38,6 @@
     {
         console.log("WME CTB Init");
         wmeCtbLayer = new OL.Layer.Vector("wmeCtbLayer",{uniqueName: "__wmeCtbLayer"});
-        W.map.addLayer(wmeCtbLayer);
 
         loadSettings();
         WazeWrap.Interface.AddLayerCheckbox("display", "Client Tile Borders", settings.Enabled, onLayerCheckboxChanged);
@@ -45,11 +49,13 @@
         wmeCtbLayer.setVisibility(settings.Enabled);
         if (settings.Enabled)
         {
+            W.map.addLayer(wmeCtbLayer);
             W.map.events.register("moveend",W.map,drawGridLines);
             drawGridLines();
         } else {
             wmeCtbLayer.removeAllFeatures();
             W.map.events.unregister("moveend",W.map,drawGridLines);
+            W.map.removeLayer(wmeCtbLayer);
         }
         saveSettings();
     }
