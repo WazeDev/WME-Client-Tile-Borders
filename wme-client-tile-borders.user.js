@@ -1,13 +1,10 @@
 // ==UserScript==
 // @name         WME Client Tile Borders
 // @namespace    https://greasyfork.org/en/users/32336-joyriding
-// @version      1.2
+// @version      1.3
 // @description  Displays grid lines representing tile borders in the client.
 // @author       Joyriding
-// @include      https://beta.waze.com/*
-// @include      https://www.waze.com/editor*
-// @include      https://www.waze.com/*/editor*
-// @exclude      https://www.waze.com/user/editor*
+// @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
 // @require      https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
 // @grant        none
 // ==/UserScript==
@@ -37,8 +34,6 @@
     function init()
     {
         console.log("WME CTB Init");
-        wmeCtbLayer = new OL.Layer.Vector("wmeCtbLayer",{uniqueName: "__wmeCtbLayer"});
-
         loadSettings();
         WazeWrap.Interface.AddLayerCheckbox("display", "Client Tile Borders", settings.Enabled, onLayerCheckboxChanged);
         onLayerCheckboxChanged(settings.Enabled);
@@ -46,16 +41,24 @@
 
     function onLayerCheckboxChanged(checked) {
         settings.Enabled = checked;
-        wmeCtbLayer.setVisibility(settings.Enabled);
+        if (wmeCtbLayer) {
+            wmeCtbLayer.setVisibility(settings.Enabled);
+        }
         if (settings.Enabled)
         {
-            W.map.addLayer(wmeCtbLayer);
+            if (!wmeCtbLayer) {
+                wmeCtbLayer = new OL.Layer.Vector("wmeCtbLayer",{uniqueName: "__wmeCtbLayer"});
+                W.map.addLayer(wmeCtbLayer);
+            }
             W.map.events.register("moveend",W.map,drawGridLines);
             drawGridLines();
         } else {
-            wmeCtbLayer.removeAllFeatures();
             W.map.events.unregister("moveend",W.map,drawGridLines);
-            W.map.removeLayer(wmeCtbLayer);
+            if (wmeCtbLayer) {
+                wmeCtbLayer.removeAllFeatures();
+                W.map.removeLayer(wmeCtbLayer);
+                wmeCtbLayer = null;
+            }
         }
         saveSettings();
     }
