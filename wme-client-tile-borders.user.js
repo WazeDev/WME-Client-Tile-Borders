@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Client Tile Borders
 // @namespace    https://greasyfork.org/en/users/32336-joyriding
-// @version      1.5
+// @version      1.6
 // @description  Displays grid lines representing tile borders in the client.
 // @author       Joyriding
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -19,6 +19,9 @@
 
     var settings = {};
     var wmeCtbLayer;
+
+    var projection=new OL.Projection("EPSG:900913");
+    var displayProjection=new OL.Projection("EPSG:4326");
 
     function bootstrap(tries) {
         tries = tries || 1;
@@ -65,7 +68,6 @@
 
     function drawGridLines()
     {
-        //console.log("WME CTB draw grid lines");
         wmeCtbLayer.removeAllFeatures();
 
         // Zoom-dependant line style options
@@ -84,8 +86,8 @@
         var geoNW=new OL.Geometry.Point(e.left,e.top);
         var geoSE=new OL.Geometry.Point(e.right,e.bottom);
 
-        geoNW=geoNW.transform(W.map.projection, W.map.displayProjection);
-        geoSE=geoSE.transform(W.map.projection, W.map.displayProjection);
+        geoNW=geoNW.transform(projection, displayProjection);
+        geoSE=geoSE.transform(projection, displayProjection);
 
         // Drop everything to the right of the hundredth decimal place
         var latStart = parseFloat(fixedDigits(geoNW.y));
@@ -182,8 +184,8 @@
             pointEnd.y = Number(fromLatIndex(latIndexEnd));
         }
 
-        pointStart.transform(W.map.displayProjection, W.map.projection);
-        pointEnd.transform(W.map.displayProjection, W.map.projection);
+        pointStart.transform(displayProjection, projection);
+        pointEnd.transform(displayProjection, projection);
 
         let lsLine1 = new OL.Geometry.LineString([pointStart, pointEnd]);
 
