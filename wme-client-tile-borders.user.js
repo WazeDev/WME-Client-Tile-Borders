@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Client Tile Borders
 // @namespace    https://greasyfork.org/en/users/32336-joyriding
-// @version      1.7
+// @version      1.8
 // @description  Displays grid lines representing tile borders in the client.
 // @author       Joyriding
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -10,7 +10,7 @@
 // ==/UserScript==
 
 /* global W */
-/* global OL */
+/* global OpenLayers */
 /* global $ */
 /* global WazeWrap */
 
@@ -20,8 +20,8 @@
     var settings = {};
     var wmeCtbLayer;
 
-    var projection=new OL.Projection("EPSG:900913");
-    var displayProjection=new OL.Projection("EPSG:4326");
+    var projection=new OpenLayers.Projection("EPSG:900913");
+    var displayProjection=new OpenLayers.Projection("EPSG:4326");
 
     function bootstrap(tries) {
         tries = tries || 1;
@@ -50,7 +50,7 @@
         if (settings.Enabled)
         {
             if (!wmeCtbLayer) {
-                wmeCtbLayer = new OL.Layer.Vector("wmeCtbLayer",{uniqueName: "__wmeCtbLayer"});
+                wmeCtbLayer = new OpenLayers.Layer.Vector("wmeCtbLayer",{uniqueName: "__wmeCtbLayer"});
                 W.map.addLayer(wmeCtbLayer);
             }
             W.map.events.register("moveend",W.map,drawGridLines);
@@ -83,8 +83,8 @@
         }
 
         var e=W.map.getExtent();
-        var geoNW=new OL.Geometry.Point(e.left,e.top);
-        var geoSE=new OL.Geometry.Point(e.right,e.bottom);
+        var geoNW=new OpenLayers.Geometry.Point(e.left,e.top);
+        var geoSE=new OpenLayers.Geometry.Point(e.right,e.bottom);
 
         geoNW=geoNW.transform(projection, displayProjection);
         geoSE=geoSE.transform(projection, displayProjection);
@@ -169,8 +169,8 @@
     }
 
     function drawDashedLine(isLatLine, lineIndex, latIndexStart, latIndexEnd, lonIndexStart, lonIndexEnd, lineWidth, lineColor) {
-        var pointStart = new OL.Geometry.Point();
-        var pointEnd   = new OL.Geometry.Point();
+        var pointStart = new OpenLayers.Geometry.Point();
+        var pointEnd   = new OpenLayers.Geometry.Point();
 
         if (isLatLine) {
             pointStart.x = Number(fromLonIndex(lonIndexStart));
@@ -187,9 +187,9 @@
         pointStart.transform(displayProjection, projection);
         pointEnd.transform(displayProjection, projection);
 
-        let lsLine1 = new OL.Geometry.LineString([pointStart, pointEnd]);
+        let lsLine1 = new OpenLayers.Geometry.LineString([pointStart, pointEnd]);
 
-        var lineFeature1 = new OL.Feature.Vector(lsLine1, {}, {
+        var lineFeature1 = new OpenLayers.Feature.Vector(lsLine1, {}, {
             strokeWidth: lineWidth,
             strokeDashstyle: '4 4',
             strokeColor: lineColor
