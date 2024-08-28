@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Client Tile Borders
 // @namespace    https://greasyfork.org/en/users/32336-joyriding
-// @version      1.9
+// @version      1.10
 // @description  Displays grid lines representing tile borders in the client.
 // @author       Joyriding
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -66,6 +66,13 @@
         saveSettings();
     }
 
+    function getOLMapextent()
+    {
+        var extent = new OpenLayers.Bounds(W.map.getExtent());
+        extent = extent.transform('EPSG:4326', 'EPSG:3857');
+        return extent;
+    }
+
     function drawGridLines()
     {
         wmeCtbLayer.removeAllFeatures();
@@ -82,7 +89,7 @@
             lineColor = '#EDEDED';
         }
 
-        var e=W.map.getExtent();
+        var e=getOLMapextent();
         var geoNW=new OpenLayers.Geometry.Point(e.left,e.top);
         var geoSE=new OpenLayers.Geometry.Point(e.right,e.bottom);
 
